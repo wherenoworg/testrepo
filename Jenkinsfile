@@ -10,35 +10,54 @@ def commit_status(context, message, state="SUCCESS"){
 
 
 /* Args:
- * repo: the repo
- * org: Github organisation or user that owwns the repo
- * sha: commit sha to update
  * pat: Github personall access token
  * state: success pending error failure
  * target_url: Url this status links to
  * description: Short description
  * context: Name of the status
  */
-@NonCPS
 def github_commit_status(Map args){
-  
-  sha = httpRequest(args.pr_url).head.sha
-  url= "https://api.github.com/repos/${args.org}/${args.repo}/statuses/${sha}?access_token=${args.pat}"
-  requestBody = """
-  {
+  sh """
+    python <<EOF
+import os
+import re
+import requests
+
+def pr_api_url(pr_ui_url):
+  match = re.match("https://github.com/(?P<org>[^/]*)/(?P<repo>[^/]*)/pull/(?P<prnum>[\\d]*)",
+    pr_ui_url)
+  gd = match.groupdict()
+  url = "https://api.github.com/repos/{org}/{repo}/pulls/{prnum}".format(
+    org=gd["org"],
+    repo=gd["repo"],
+    prnum=gd["prnum"]
+  )
+  url = add_token(url)
+  print("{pr_ui_url} --> {url}".format(pr_ui_url=pr_ui_url, url=url))
+  return url
+
+def add_token(url):
+  url = "{url}?access_token={pat}".format(url=url, pat="${args.pat}")
+  print(url)
+  return url
+
+response = requests.get(pr_api_url(os.environ["CHANGE_URL"]))
+response.encoding = 'utf-8'
+print "Get pr info response: ", response
+pr_info = response.json()
+sha = pr_info["head"]["sha"]
+response = requests.post(
+  url=add_token(pr_info["statuses_url"]),
+  data={
     "state": "${args.state}",
     "target_url": "${args.target_url}",
     "description": "${args.description}",
     "context": "${args.context}"
-  }"""
-  echo("Github Status update:")
-  echo(url)
-  echo(requestBody)
-  httpRequest(
-    httpMode: 'POST',
-    url: url,
-    requestBody: requestBody
-  )
+  })
+print "update status response: ", response
+
+EOF
+"""
 }
 
 node(){
@@ -66,8 +85,7 @@ node(){
 
     stage("Ceph"){
       echo("I'm the ceph stage")
-      github_commit_status("ceph", "Build Complete")
-            github_commit_status(
+      github_commit_status(
         repo: "testrepo",
         org: "wherenoworg",
         pr_url: env.CHANGE_URL,
