@@ -19,6 +19,7 @@ def commit_status(context, message, state="SUCCESS"){
 def github_commit_status(Map args){
   sh """
     python <<EOF
+import json
 import os
 import re
 import requests
@@ -45,12 +46,12 @@ response = requests.get(pr_api_url(os.environ["CHANGE_URL"]))
 print "Get pr info response: ", response
 pr_info = response.json()
 sha = pr_info["head"]["sha"]
-body={
+body=json.dumps({
     "state": "${args.state}",
     "target_url": "${args.target_url}",
     "description": "${args.description}",
     "context": "${args.context}"
-  }
+  })
 url=add_token(pr_info["statuses_url"])
 print "Update status request, url: {url}, body: {body}".format(url=url, body=body)
 response = requests.post(url=url, data=body)
