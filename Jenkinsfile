@@ -20,11 +20,13 @@ def github_commit_status(Map args){
   httpRequest(
     httpMode: 'POST',
     url: "https://api.github.com/repos/${args.org}/${args.repo}/statuses/${args.sha}?access_token=${args.pat}",
-    requestBody: _write_json_string([
-      "state": args.state,
-      "target_url": args.url,
-      "description": args.description,
-      "context": args.context])
+    requestBody: """
+      {
+        "state": "${args.state}",
+        "target_url": "${args.url}",
+        "description": "${args.description}",
+        "context": "${args.context}"
+      }"""
     )
 
 }
