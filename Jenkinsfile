@@ -7,16 +7,47 @@ def commit_status(context, message, state="SUCCESS"){
   ])
 }
 
-node(){
-  stage("Swift"){
-    echo("I'm the swift steage")
-    commit_status("swfit", "Build Complete")
-  }
-  
-  stage("Ceph"){
-    echo("I'm the ceph stage")
-    commit_status("ceph", "Build Complete")
-    
-  }
+/* Args:
+ * org: Github organisation or user that owwns the repo
+ * sha: commit sha to update
+ * pat: Github personall access token
+ * state: success pending error failure
+ * target_url: Url this status links to
+ * description: Short description
+ * context: Name of the status
+ */
+def github_commit_status(Map args){
+  httpRequest(
+    httpMode: 'POST',
+    url: "https://api.github.com/repos/${args.org}/${args.repo}/statuses/${args.sha}?access_token=${args.pat}",
+    requestBody: _write_json_string([
+      "state": args.state,
+      "target_url": args.url,
+      "description": args.description,
+      "context": args.context])
+    )
 
 }
+
+node(){
+  withCredentials([
+    string(
+      credentialsId: "hughsaunders_github_pat"
+      variable: "github_pat"
+   )
+  ]){
+    
+    stage("Swift"){
+      echo("I'm the swift steage")
+      github_commit_status(
+        org: "wherenoworg",
+        sha: "swfit", "Build Complete")
+    }
+
+    stage("Ceph"){
+      echo("I'm the ceph stage")
+      github_commit_status("ceph", "Build Complete")
+
+    }//stage
+  }//creds
+}//node
