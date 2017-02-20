@@ -2,7 +2,9 @@ def commit_status(context, message, state="SUCCESS"){
   step([$class: 'GitHubCommitStatusSetter',
   contextSource: [$class: 'ManuallyEnteredCommitContextSource', context: context],
   statusResultSource: [$class: 'ConditionalStatusResultSource',
-    results: [[$class: 'AnyBuildResult', message: message, state: state]]]])
+    results: [[$class: 'AnyBuildResult', message: message, state: state]]],
+  backrefSource: [$class: 'ManuallyEnteredBackrefSource', backref: "http://google.com"]
+  ])
 }
 
 node(){
