@@ -40,7 +40,7 @@ node(){
       variable: "github_pat"
    )
   ]){
-    sha = sh(returnStdout: true, script: "git rev-parse HEAD")    
+    sha = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
     stage("Swift"){
       echo("I'm the swift steage")
       github_commit_status(
