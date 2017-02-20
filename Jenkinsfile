@@ -44,7 +44,7 @@ node(){
     stage("Swift"){
       echo("I'm the swift steage")
       github_commit_status(
-        repo: "testrepo"
+        repo: "testrepo",
         org: "wherenoworg",
         sha: sha,
         pat: env.github_pat,
@@ -59,7 +59,7 @@ node(){
       echo("I'm the ceph stage")
       github_commit_status("ceph", "Build Complete")
             github_commit_status(
-        repo: "testrepo"
+        repo: "testrepo",
         org: "wherenoworg",
         sha: sha,
         pat: env.github_pat,
