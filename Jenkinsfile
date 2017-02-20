@@ -42,19 +42,19 @@ def add_token(url):
   return url
 
 response = requests.get(pr_api_url(os.environ["CHANGE_URL"]))
-response.encoding = 'utf-8'
 print "Get pr info response: ", response
 pr_info = response.json()
 sha = pr_info["head"]["sha"]
-response = requests.post(
-  url=add_token(pr_info["statuses_url"]),
-  data={
+body={
     "state": "${args.state}",
     "target_url": "${args.target_url}",
     "description": "${args.description}",
     "context": "${args.context}"
-  })
-print "update status response: ", response
+  }
+url=add_token(pr_info["statuses_url"])
+print "Update status request, url: {url}, body: {body}".format(url=url, body=body)
+response = requests.post(url=url, data=body)
+print "update status response: ", response, response.content
 
 EOF
 """
