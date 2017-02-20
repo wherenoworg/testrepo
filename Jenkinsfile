@@ -3,7 +3,7 @@ def commit_status(context, message, state="SUCCESS"){
   contextSource: [$class: 'ManuallyEnteredCommitContextSource', context: context],
   statusResultSource: [$class: 'ConditionalStatusResultSource',
     results: [[$class: 'AnyBuildResult', message: message, state: state]]],
-  backrefSource: [$class: ManuallyEnteredBackrefSource, backref: "http://google.com"]
+  backrefSource: [$class: 'ManuallyEnteredBackrefSource', backref: "http://google.com"]
   ])
 }
 
