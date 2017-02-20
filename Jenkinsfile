@@ -33,7 +33,7 @@ node(){
   checkout scm
   withCredentials([
     string(
-      credentialsId: "hughsaunders_github_pat"
+      credentialsId: "hughsaunders_github_pat",
       variable: "github_pat"
    )
   ]){
