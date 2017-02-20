@@ -18,18 +18,19 @@ def commit_status(context, message, state="SUCCESS"){
  * context: Name of the status
  */
 def github_commit_status(Map args){
+  requestBody = """
+  {
+    "state": "${args.state}",
+    "target_url": "${args.url}",
+    "description": "${args.description}",
+    "context": "${args.context}"
+  }"""
+  echo(requestBody)
   httpRequest(
     httpMode: 'POST',
     url: "https://api.github.com/repos/${args.org}/${args.repo}/statuses/${args.sha}?access_token=${args.pat}",
-    requestBody: """
-      {
-        "state": "${args.state}",
-        "target_url": "${args.url}",
-        "description": "${args.description}",
-        "context": "${args.context}"
-      }"""
-    )
-
+    requestBody: requestBody
+  )
 }
 
 node(){
