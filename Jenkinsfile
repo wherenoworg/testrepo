@@ -8,6 +8,7 @@ def commit_status(context, message, state="SUCCESS"){
 }
 
 /* Args:
+ * repo: the repo
  * org: Github organisation or user that owwns the repo
  * sha: commit sha to update
  * pat: Github personall access token
@@ -43,6 +44,7 @@ node(){
     stage("Swift"){
       echo("I'm the swift steage")
       github_commit_status(
+        repo: "testrepo"
         org: "wherenoworg",
         sha: sha,
         pat: env.github_pat,
@@ -57,6 +59,7 @@ node(){
       echo("I'm the ceph stage")
       github_commit_status("ceph", "Build Complete")
             github_commit_status(
+        repo: "testrepo"
         org: "wherenoworg",
         sha: sha,
         pat: env.github_pat,
