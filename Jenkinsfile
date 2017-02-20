@@ -30,23 +30,39 @@ def github_commit_status(Map args){
 }
 
 node(){
+  checkout scm
   withCredentials([
     string(
       credentialsId: "hughsaunders_github_pat"
       variable: "github_pat"
    )
   ]){
-    
+    sha = sh(returnStdout: true, script: "git rev-parse HEAD")    
     stage("Swift"){
       echo("I'm the swift steage")
       github_commit_status(
         org: "wherenoworg",
-        sha: "swfit", "Build Complete")
+        sha: sha,
+        pat: env.github_pat,
+        state: "success",
+        target_url: "http://google.com",
+        description: "um ok.",
+        context: "swift"
+     )
     }
 
     stage("Ceph"){
       echo("I'm the ceph stage")
       github_commit_status("ceph", "Build Complete")
+            github_commit_status(
+        org: "wherenoworg",
+        sha: sha,
+        pat: env.github_pat,
+        state: "success",
+        target_url: "http://google.com",
+        description: "where am I?",
+        context: "ceph"
+     )
 
     }//stage
   }//creds
