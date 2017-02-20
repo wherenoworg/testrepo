@@ -22,7 +22,7 @@ def github_commit_status(Map args){
   requestBody = """
   {
     "state": "${args.state}",
-    "target_url": "${args.url}",
+    "target_url": "${args.target_url}",
     "description": "${args.description}",
     "context": "${args.context}"
   }"""
@@ -31,7 +31,7 @@ def github_commit_status(Map args){
   echo(requestBody)
   httpRequest(
     httpMode: 'POST',
-    url: url
+    url: url,
     requestBody: requestBody
   )
 }
