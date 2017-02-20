@@ -7,6 +7,8 @@ def commit_status(context, message, state="SUCCESS"){
   ])
 }
 
+
+
 /* Args:
  * repo: the repo
  * org: Github organisation or user that owwns the repo
@@ -17,6 +19,7 @@ def commit_status(context, message, state="SUCCESS"){
  * description: Short description
  * context: Name of the status
  */
+@NonCPS
 def github_commit_status(Map args){
   
   sha = httpRequest(args.pr_url).head.sha
