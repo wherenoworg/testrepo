@@ -19,8 +19,7 @@ def commit_status(context, message, state="SUCCESS"){
  */
 def github_commit_status(Map args){
   
-  pr_info = httpRequest(args.pr_url)
-  sha = pr_info.head.sha
+  sha = httpRequest(args.pr_url).head.sha
   url= "https://api.github.com/repos/${args.org}/${args.repo}/statuses/${sha}?access_token=${args.pat}"
   requestBody = """
   {
