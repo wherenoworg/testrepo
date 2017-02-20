@@ -18,7 +18,10 @@ def commit_status(context, message, state="SUCCESS"){
  * context: Name of the status
  */
 def github_commit_status(Map args){
-  url= "https://api.github.com/repos/${args.org}/${args.repo}/statuses/${args.sha}?access_token=${args.pat}"
+  
+  pr_info = httpRequest(args.pr_url)
+  sha = pr_info.head.sha
+  url= "https://api.github.com/repos/${args.org}/${args.repo}/statuses/${sha}?access_token=${args.pat}"
   requestBody = """
   {
     "state": "${args.state}",
@@ -50,7 +53,7 @@ node(){
       github_commit_status(
         repo: "testrepo",
         org: "wherenoworg",
-        sha: sha,
+        pr_url: env.CHANGE_URL,
         pat: env.github_pat,
         state: "success",
         target_url: "http://google.com",
@@ -65,7 +68,7 @@ node(){
             github_commit_status(
         repo: "testrepo",
         org: "wherenoworg",
-        sha: sha,
+        pr_url: env.CHANGE_URL,
         pat: env.github_pat,
         state: "success",
         target_url: "http://google.com",
