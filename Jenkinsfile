@@ -8,6 +8,7 @@ def commit_status(context, message, state="SUCCESS"){
 }
 
 node(){
+  sh "env"
   stage("Swift"){
     echo("I'm the swift steage")
     commit_status("swfit", "Build Complete")
