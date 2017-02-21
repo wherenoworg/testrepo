@@ -1,7 +1,6 @@
-common.libfunc()
-
 node(){
   checkout scm
+  common.install_ansible()
   sh "env"
   withCredentials([
     string(
