@@ -1,6 +1,5 @@
 
-common()
-common.common()
+common.libfunc()
 
 /* Args:
  * pat: Github personall access token
