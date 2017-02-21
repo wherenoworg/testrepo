@@ -1,13 +1,5 @@
-def commit_status(context, message, state="SUCCESS"){
-  step([$class: 'GitHubCommitStatusSetter',
-  contextSource: [$class: 'ManuallyEnteredCommitContextSource', context: context],
-  statusResultSource: [$class: 'ConditionalStatusResultSource',
-    results: [[$class: 'AnyBuildResult', message: message, state: state]]],
-  backrefSource: [$class: 'ManuallyEnteredBackrefSource', backref: "http://google.com"]
-  ])
-}
 
-
+libfunc()
 
 /* Args:
  * pat: Github personall access token
@@ -17,8 +9,7 @@ def commit_status(context, message, state="SUCCESS"){
  * context: Name of the status
  */
 def github_commit_status(Map args){
-  sh """
-    python <<EOF
+  sh """#!/usr/bin/env python
 import json
 import os
 import re
@@ -56,13 +47,12 @@ url=add_token(pr_info["statuses_url"])
 print "Update status request, url: {url}, body: {body}".format(url=url, body=body)
 response = requests.post(url=url, data=body)
 print "update status response: ", response, response.content
-
-EOF
 """
 }
 
 node(){
   checkout scm
+  sh "env"
   withCredentials([
     string(
       credentialsId: "hughsaunders_github_pat",
