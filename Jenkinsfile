@@ -1,6 +1,6 @@
 node(){
   checkout scm
-  this.binding.variables.each {k,v -> println "$k = $v"}
+  ssh_slave.connect()
   sh "env"
   withCredentials([
     string(
