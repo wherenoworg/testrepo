@@ -1,6 +1,6 @@
 node(){
   checkout scm
-  common.install_ansible()
+  this.binding.variables.each {k,v -> println "$k = $v"}
   sh "env"
   withCredentials([
     string(
