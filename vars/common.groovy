@@ -3,7 +3,7 @@ def libfunc(){
 }
 
 def githubStatus(Map args){
-  ghstatus = libraryRresource 'ghstatus.py'
+  ghstatus = libraryResource 'ghstatus.py'
   sh ghstatus
 }
 
