@@ -1,41 +1,17 @@
+currentBuild.result = "SUCCESS"
 node(){
   checkout scm
-  ssh_slave.connect()
-  sh "env"
-  withCredentials([
-    string(
-      credentialsId: "hughsaunders_github_pat",
-      variable: "github_pat"
-   )
-  ]){
-    sha = sh(returnStdout: true, script: "git rev-parse HEAD").trim()
-    stage("Swift"){
-      echo("I'm the swift steage")
-      common.githubStatus(
-        repo: "testrepo",
-        org: "wherenoworg",
-        pr_url: env.CHANGE_URL,
-        pat: env.github_pat,
-        state: "success",
-        target_url: "http://google.com",
-        description: "um ok.",
-        context: "swift"
-     )
-    }
-
-    stage("Ceph"){
-      echo("I'm the ceph stage")
-      common.githubStatus(
-        repo: "testrepo",
-        org: "wherenoworg",
-        pr_url: env.CHANGE_URL,
-        pat: env.github_pat,
-        state: "success",
-        target_url: "http://google.com",
-        description: "where am I?",
-        context: "ceph"
-     )
-
-    }//stage
-  }//creds
-}//node
+  print "the end.."
+  //key = jiraIssueSelector() // <-- throws NPE.
+  //print("issue key: ${key}")
+  
+  // test with hard coded issue key. 
+  jiraComment(
+    issueKey: "IT-18", 
+    body: "Jenkins Build [${JOB_NAME}|${JOB_URL}] [#${BUILD_NUMBER}|${BUILD_URL}] ${currentBuild.result}"
+  )
+  // This gives unsupported run type
+  //step([$class: 'hudson.plugins.jira.JiraIssueUpdater', 
+  //  issueSelector: [$class: 'hudson.plugins.jira.selector.DefaultIssueSelector'], 
+  //]) 
+}
