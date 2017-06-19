@@ -1,7 +1,10 @@
 node(){
-  checkout scm
-  ssh_slave.connect()
+  
   sh "env"
+  checkout scm
+  
+  ssh_slave.connect()
+  
   withCredentials([
     string(
       credentialsId: "hughsaunders_github_pat",
