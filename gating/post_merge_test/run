@@ -1,0 +1,3 @@
+#!/bin/bash -xeu
+
+echo "I'm the post merge test run script!"
