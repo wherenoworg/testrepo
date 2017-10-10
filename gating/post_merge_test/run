@@ -1,3 +1,5 @@
 #!/bin/bash -xeu
 
 echo "I'm the post merge test run script!"
+mkdir -p $RE_HOOK_ARTIFACT_DIR
+date > $RE_HOOK_ARTIFACT_DIR/datestamp
