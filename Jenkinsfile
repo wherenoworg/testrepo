@@ -7,11 +7,16 @@ def getTrigger(){
         case 'hudson.triggers.TimerTrigger$TimerTriggerCause':
             return "Timer"
             break;
-        case 'hudson.triggers.SCMTrigger.SCMTriggerCause':
-            return "SCM"
-            break;
-        case 'jenkins.branch.BranchEventCause':
-            return 'git'
+        case ['hudson.triggers.SCMTrigger.SCMTriggerCause',
+              'jenkins.branch.BranchEventCause',
+              'jenkins.branch.BranchIndexingCause']:
+            if (env.CHANGE_ID != null){
+                return 'pr'
+            } else if (env.TAG_NAME != null){
+                return 'tag'
+            } else {
+                return 'push'
+            }
             break;
     }
 }
@@ -23,6 +28,7 @@ pipeline {
             steps {
                 sh 'ls'
                 script {
+                    print("CHANGE_ID: ${env.CHANGE_ID}")
                     print(getTrigger())
                 }
             }
